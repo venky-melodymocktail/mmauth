@@ -14,9 +14,14 @@ spec:
     spec:
       containers:
         - name: auth-service
-          image:  demoregistry4.azurecr.io/auth:latest
+          image: demoregistry4.azurecr.io/auth:latest
           ports:
             - containerPort: 8089
+          resources:
+            requests:
+              cpu: 100m
+            limits:
+              cpu: 200m
       imagePullSecrets:
         - name: acr-credentials
 
@@ -34,3 +39,24 @@ spec:
     - protocol: TCP
       port: 80
       targetPort: 8089
+
+---
+
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: auth-service-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: auth-service
+  minReplicas: 2
+  maxReplicas: 5
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 60
