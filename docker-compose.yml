@@ -1,0 +1,8 @@
+version: '3.8'
+
+services:
+  authentication:
+    image: authenticationimage:$BUILD_TAG
+    ports:
+      - "8089:8089"
+    restart: always
