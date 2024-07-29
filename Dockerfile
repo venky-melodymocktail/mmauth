@@ -14,6 +14,9 @@ RUN yarn install
 COPY . .
 
 # Expose the port the app runs on
+ARG BUILD_NUMBER
+LABEL build_number=${BUILD_NUMBER}
+
 
 EXPOSE 8089
 
